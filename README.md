@@ -1,117 +1,64 @@
-## A Relatively Simple Example 
+A Minimum Version of SF Food Trucks 
+===================================
+This is a minimum working version of SF Food Trucks. A web site for people to find near 
+by food trucks given zipcode or address. Results will be retrieved and show results in a
+list view as well as on the map. 
 
-### Node.js, Restify, MongoDb and Mongoose
-
-authors: 
-
-Thomas Davis | https://github.com/thomasdavis
-
-Brandon Flowers | https://github.com/headwinds 
-
-If you would like to discuss any of this code, please your leave comments using disqus at the bottom of [the main article](http://backbonetutorials.com/nodejs-restify-mongodb-mongoose/).
-
-This README.md has four main sections:
-
-1. STRUCTURE - why are there 2 servers?!
-2. HTTP SERVER - serves static html, css, js; the front-end
-3. MONGODB - pure data services; the back-end 
-4. THE MISSING CONFIG.JS FILE - the long and short:  see configSample.js and then create your own config.js 
-
-### STRUCTURE
-
-There are basically two parts to this demo - two servers - within one file, server.js, which may sound a little confusing but the two servers do different things. 
-
-The first server, httpServer, serves up static html/js/css to the browser and the second, mongodbServer, is purely for saving and retrieving data from the mongodb.  
-
-I've put both servers in the server.js which makes it extremely long and challenging to maintain but it does the job for this demo. Also, each server is listening on its own port. If you are only allowed access to one public port, you could choose one server to listen on that port then pass the events to the other server which may be interested in different routes. For instance, in this case, if the http server listens for a /messages route, it could trigger an event and pass that to the mongo server. 
-
-In addition to server.js, I've also refactored it into two separate files: server-http.js and server-mongo.js.
-
-If you only need the mongobd server, you might start with the server-mongo folder.  
-
-### HTTP SERVER
-
-Originally, this tutorial started out as purely a mongodb one but I wanted to see the data in a browser and since this is a collection of Backbone tutorials, I might as well include some client-side backbone views. 
-
-I also started working on it before discovering Google's Yeoman which includes its own web server that serves static files thus making the HTTP portion not necessary when testing locally, however, when you move to host these files somewhere else like nodejitsu, you may need to use your own static web server if it doesn't support nginx or apache. 
-
-But before using Yeoman, you might want to try open a terminal to the directory of this app and typing:
-
-$ node server   
-
-Next, you will need to open browser and point it to:
-
-http://localhost:8080/
-
-Alternatively, you can use Yeoman which would automatically launch a browser window and also you more features like live reload. 
-
-$ yeoman server
-
-By default, yeoman looks at the "app" directory. If you update to Yeoman 1.0, you are able to configure this path in the grunt.js file and configure it to look any folder like "public" but at the time of writing this demo, I'm using Yeoman 0.9.6 so will keep the "app" directory.
- 
-Yeoman automatically launches a browser window to: 
-
-http://localhost:3501/ 
-
-http server: 
-
-If you'd like to see the raw messages as a json dump, you can point your browser to: 
-
-http://localhost:8888/messages 
-
-This static server is taken very largely (line for line) from [this example on thecodinghumanist.com](http://thecodinghumanist.com/blog/archives/2011/5/6/serving-static-files-from-node-js) and thus a very large credit should go to Eric Sowell. 
+Due to personal time constraints, the current working version covers the most basic function. 
+However, the project structure is architured to easily scale in terms of development and test. 
 
 
-### MONGODB
+Tao Jiang 
 
-In order to setup my mongodb database, I've taken the following steps:
+GitHub : https://github.com/chefandengineer
 
-1. I have two terminal windows open.
+LinkedIn : https://www.linkedin.com/profile/view?id=104740077
+		
 
-2. In the the first one, I've started mongoDB: 
-$ mongod
+Project Selected : Food Trucks 
 
-3. In the second, I've started the mongo shell
-$ mongo
+Heroku Link : http://peaceful-island-7525.herokuapp.com/
 
-In the mongo shell, I've created a database called "nationalpark"
+Technical Track : Full Stack
 
-> use nationalpark 
 
-This will automatically create and use this new database called nationalpark 
+Technical Stack Choices 
+-----------------------
+1. Front End : Bootstrap, Backbone.js, Underscore.js, Require.js (minimum experience)
+2. Back End : Node.js, Restify.js, Require.js (no experience)
+3. Database : Mongoose.js, MongoDB (no experience)
+4. Test Frmework : Mocha.js, Require.js (no experience)
 
-then, I've added a collection called "messages" and inserted a message
 
-var message = { message: "onward, upward", hiker: "rosella"}; 
+Development Descisions 
+----------------------
+Front End : 
 
-> db.messages.insert(message); 
+1. Considering this will be a simple applcation, bootstrap is the best choice to rapidly build clean UI
+2. Backbone.js essetially provides the client side MVC. It helps structure and modular the code, decouples views and data interaction(RESTful API) in the front end. It gives the application the power to scale comparing to a project of endless jQuery callbacks. It's light and open source therefore easy to learn and to find support. Comparing to other similar alternative, Ext js is robust but it's commercial. Angular.js is also powerful but a little heavy for building this small project.
+3. Underscore gives the ability to reuse all the front end HTML components. When developing a sing page app, this will be an important capability as the UI can get complicated very quicly. 
 
-Once you use nationalpark, db becomes the link to it
+Back End : 
 
-Just to prove you've added a message, you can display all the messages 
 
-> db.messages.find();
+1. I've never really used Node.js but interested in learning it, so I take this chance to learn it. It's fast and powerful. 
+2. For the service, the are not many choices for node.js. Restify/Express both are light and handles a small application like this well. 
+3. Require.js helps modularize all the files in the project which gives a good structure for the project to go forward. 
+Database : 
 
-Now, I have a database with a collection of messages containing at least one message. You view this message in the browser, visit:
 
-> http://localhost:8888/messages
+1. In this project, there is bascially no database write required after the db get populated. And the data is only about 600 records in a json file. Therefore MongoDB is best choice as it's light but scalable, and it's object oriented which naturally maps our existing json data. 
+Test : 
 
-## THE MISSING CONFIG.JS FILE 
 
-If you plan to work with a public github, it is a good idea to protect your production mongodb connection uri and put it in a config file which you include in .gitignore so that it doesn't get committed  
+1. Mocha is good choice for Node.js and Backbone.js as it supports both node and browser. You can use any assertion style and well support for async testing. It also works well with other library such as sinon to provide stubs etc. All the test is also modularized with require.js. 
 
-> var config = require('./config'); // Local congig file to hide creds
-> db = mongoose.connect(config.mongoose_auth),
-> Schema = mongoose.Schema;  
+Trade-offs 
+----------------------
+Due to work, I have very very limited time to work on this. So in terms of functional, I would like to add the ability to rate and tag different food trucks, filter food trucks by food types and tags, and better UI improvement. Also, as it's my first time using the whole stack of technology, there are places that I need to learn more to find the best practice. I think if I had time I can go over the code and better refactor the code. For example, optimize the communication of different backbone components. 
 
-When you go to host it on a platform like nodejitsu, you will need to deploy that config file so ensure it is included by using a .npmignore file
 
-Within my .gitignore file, I have three line to not include my config.js and my sublime project files: 
-
-config.js 
-backbone.sublime-project
-backbone.sublime-workspace 
-
-Within my .npmignore file, I have one to include the config:
-
-!./config.js
+Other Code that Worth A Look 
+----------------------
+Improved Movie Recommendation Engine 
+GitHub Repo : https://github.com/chefandengineer/MovieRecommendationEngine
