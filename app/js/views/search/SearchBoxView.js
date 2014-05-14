@@ -10,7 +10,16 @@ define([
   var SearchBoxView = Backbone.View.extend({
     el: '#searchbox-container',
     events: {
-        'click button[id=searchFoodTrucks]' : "setZipCode" 
+        'click button[id=searchFoodTrucks]' : "setZipCode",
+        'keypress' : 'onKeyPressed' 
+    },
+    onKeyPressed : function(e) {
+      var code = e.keyCode || e.which;
+      if (code == 13) {
+        e.preventDefault();
+        $('#searchFoodTrucks').click();
+        return false;
+      }
     },
     render: function () {
       $(this.el).html(searchBoxTemplate);
